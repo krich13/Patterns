@@ -2,7 +2,6 @@ package ru.netology.data;
 
         import lombok.AllArgsConstructor;
         import lombok.Data;
-        import lombok.NoArgsConstructor;
         import java.time.LocalDate;
 
 @Data
@@ -13,4 +12,5 @@ public class TestData {
     String fullName;
     String phone;
     Boolean checkbox;
+
 }

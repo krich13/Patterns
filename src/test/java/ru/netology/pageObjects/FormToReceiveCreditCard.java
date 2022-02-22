@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ru.netology.data.DataGenerator;
 import ru.netology.data.TestData;
 
 import java.time.Duration;
@@ -21,21 +20,7 @@ public class FormToReceiveCreditCard {
 
     private static final long BETWEEN_DAY = 86_400_000;
 
-    public static void fillCardForm() {
-        TestData data = DataGenerator.GenerateUserForPositiveChecks();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-            $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-            $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-            $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-            $("[name=\"name\"]").setValue(data.getFullName());
-            $("[name=\"phone\"]").setValue(data.getPhone());
-            if (data.getCheckbox())
-                $(Selectors.byClassName("checkbox__box")).click();
-            $(Selectors.byText("Запланировать")).click();
-        }
-
-    public static void fillCardFormWithCompoundName() {
-        TestData data = DataGenerator.GenerateUserWithCompoundName();
+    public static void fillCardForm(TestData data) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
@@ -47,187 +32,56 @@ public class FormToReceiveCreditCard {
         $(Selectors.byText("Запланировать")).click();
     }
 
-    public static void fillCardFormWithHyphenName() {
-        TestData data = DataGenerator.GenerateUserWithHyphenName();
+    public static void clickBookForASecondTime(TestData data) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
         $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void fillCardFormWithЁ() {
-        TestData data = DataGenerator.GenerateUserWithЁ();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+        $(Selectors.withText("Успешно!")).should(Condition.appear, Duration.ofSeconds(15));
+        String actualFirstResult = $(".notification__content").getText();
+        Assertions.assertTrue(actualFirstResult.contains(LocalDate.now().plusDays(5).format(formatter)));
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.byText("Перепланировать")).should(Condition.appear, Duration.ofSeconds(15));
+        $(Selectors.byText("Перепланировать")).click();
+        String actualResult = $(".notification__content").getText();
+        Assertions.assertTrue(actualResult.contains(LocalDate.now().plusDays(5).format(formatter)));
     }
 
-    public static void fillCardFormWithLatinInName() {
-        TestData data = DataGenerator.GenerateUserLatinInName();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void successLoginPage(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.withText("Успешно!")).should(Condition.appear, Duration.ofSeconds(15));
     }
 
-    public static void fillCardFormWithEmptyName() {
-        TestData data = DataGenerator.GenerateUserWithEmptyName();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void failLoginPageWithWrongCredentials(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
 
-    public static void fillCardFormWithLatinInCity () {
-        TestData data = DataGenerator.GenerateUserWithLatinInCity();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void fieldMustBeFilled(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.byText("Поле обязательно для заполнения"));
+
     }
 
-    public static void fillCardFormWithEmptyCity () {
-        TestData data = DataGenerator.GenerateUserWithEmptyCity();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void deliveryIsNotAvailable(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.byText("Доставка в выбранный город недоступна"));
     }
-    public static void fillCardFormWithLongNumber () {
-        TestData data = DataGenerator.GenerateUserWithLongNumber();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+
+    public static void putCorrectNumber(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $(Selectors.withText("Поле обязательно для заполнения.Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."))
+                .should(Condition.appear, Duration.ofSeconds(15));
     }
 
-    public static void fillCardFormWithWrongPhoneNumberFormat () {
-        TestData data = DataGenerator.GenerateUserWithWrongPhoneNumberFormat();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void failLoginWithoutCheckbox(TestData data) {
         $(Selectors.byText("Запланировать")).click();
+        $("[data-test-id='agreement']").shouldHave(Condition.cssClass("input_invalid"));
+        $(Selectors.withText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).should(Condition.appear, Duration.ofSeconds(15));
     }
 
-    public static void fillCardFormWithShortPhoneNumber () {
-        TestData data = DataGenerator.GenerateUserWithShortPhoneNumberFormat();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
+    public static void bookForWrongDate(TestData data) {
         $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void fillCardFormWithEmptyPhoneNumber () {
-        TestData data = DataGenerator.GenerateUserWithEmptyPhoneNumber();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
-        $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void fillCardFormWithEmptyFields () {
-        TestData data = DataGenerator.GenerateUserWithEmptyFields();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
-        $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void fillCardFormWithUncheckedBox () {
-        TestData data = DataGenerator.GenerateUserWithUncheckedBox();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
-        $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void fillCardFormWithWrongDate () {
-        TestData data = DataGenerator.GenerateUserWithWrongDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        $("[class='input__control'][type='tel']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[class='input__control'][type='tel']").append(data.getDate().format(formatter)).pressEnter();
-        $(Selectors.byAttribute("type", "text")).setValue(data.getCity());
-        $("[name=\"name\"]").setValue(data.getFullName());
-        $("[name=\"phone\"]").setValue(data.getPhone());
-        if (data.getCheckbox())
-            $(Selectors.byClassName("checkbox__box")).click();
-        $(Selectors.byText("Запланировать")).click();
-    }
-
-    public static void setNextDay(LocalDate date) {
-        $("[class='input__control'][type='tel']").setValue(date.toString());
-    }
-
-    /**
-     * Метод, который меняет дату в календаре
-     */
-
-    public static void selectDayFromCalendar(long day) {
-        $(Selectors.byClassName("input_type_tel")).click();
-        String data = $(Selectors.byClassName("calendar__day_state_current")).getAttribute("data-day");
-        long newDate = Long.valueOf(data) + BETWEEN_DAY * day;
-        $(Selectors.byAttribute("data-day", String.valueOf(newDate))).click();
+        $(Selectors.withText("Заказ на выбранную дату невозможен"))
+                .should(Condition.appear, Duration.ofSeconds(15));
     }
 
 }
