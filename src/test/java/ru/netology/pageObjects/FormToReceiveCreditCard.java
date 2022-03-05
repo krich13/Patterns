@@ -2,7 +2,6 @@ package ru.netology.pageObjects;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ru.netology.data.TestData;
 
@@ -10,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 /**
@@ -36,13 +36,11 @@ public class FormToReceiveCreditCard {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         $(Selectors.byText("Запланировать")).click();
         $(Selectors.withText("Успешно!")).should(Condition.appear, Duration.ofSeconds(15));
-        String actualFirstResult = $(".notification__content").getText();
-        Assertions.assertTrue(actualFirstResult.contains(LocalDate.now().plusDays(5).format(formatter)));
+        $(".notification__content").shouldHave(text(LocalDate.now().plusDays(5).format(formatter)));
         $(Selectors.byText("Запланировать")).click();
         $(Selectors.byText("Перепланировать")).should(Condition.appear, Duration.ofSeconds(15));
         $(Selectors.byText("Перепланировать")).click();
-        String actualResult = $(".notification__content").getText();
-        Assertions.assertTrue(actualResult.contains(LocalDate.now().plusDays(5).format(formatter)));
+        $(".notification__content").shouldHave(text(LocalDate.now().plusDays(5).format(formatter)));
     }
 
     public static void successLoginPage(TestData data) {

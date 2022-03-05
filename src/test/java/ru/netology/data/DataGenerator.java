@@ -8,7 +8,7 @@ import java.util.Locale;
 public class DataGenerator {
 
     private static Faker faker = new Faker(new Locale("ru"));
-    private static String[] cities = {"Москва", "Краснодар", "Улан-Удэ", "Владивосток", "Пермь", "Омск", "Самара", "Томск", "Санкт-Петербург"};
+    private final static String[] cities = {"Москва", "Краснодар", "Улан-Удэ", "Владивосток", "Пермь", "Омск", "Самара", "Томск", "Санкт-Петербург"};
     private static int randomCity = (int) Math.floor(Math.random() * cities.length);
 
     public static TestData generateUserForPositiveChecks() {
