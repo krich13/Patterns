@@ -1,16 +1,18 @@
 package ru.netology.data;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
+@Value
 public class TestData {
+    public TestData(String city, String fullName, String phone) {
+        this.city = city;
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
     private String city;
-    private LocalDate date;
     private String fullName;
     private String phone;
-    private Boolean checkbox;
+
 }

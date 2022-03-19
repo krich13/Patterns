@@ -6,107 +6,138 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 public class DataGenerator {
+    private static String city;
+    private static String fullName;
+    private static String phone;
 
     private static Faker faker = new Faker(new Locale("ru"));
     private final static String[] cities = {"Москва", "Краснодар", "Улан-Удэ", "Владивосток", "Пермь", "Омск", "Самара", "Томск", "Санкт-Петербург"};
     private static int randomCity = (int) Math.floor(Math.random() * cities.length);
 
+
+    public static String generateCity() {
+        String city = cities[randomCity];
+        return city;
+    }
+
+    public static String generateName() {
+        String name = faker.name().fullName();
+        return name;
+    }
+
+    public static String generatePhone() {
+        String phone = faker.phoneNumber().phoneNumber();
+        return phone;
+    }
+
+    public static LocalDate generateDate() {
+        LocalDate date = LocalDate.now().plusDays(5);
+        return date;
+    }
+
     public static TestData generateUserForPositiveChecks() {
         TestData UserForPositiveChecks = new TestData(
-                cities[randomCity],
-                LocalDate.now().plusDays(5),
-                faker.name().fullName(),
-                faker.phoneNumber().phoneNumber(),
-                true);
+                city = generateCity(),
+                fullName = generateName(),
+                phone = generatePhone());
         return UserForPositiveChecks;
     }
 
     public static TestData generateUserWithCompoundName() {
-        TestData data = generateUserForPositiveChecks();
-        data.setFullName(faker.name().nameWithMiddle());
-        return data;
+        TestData UserWithCompoundName = new TestData(
+                city = generateCity(),
+                fullName = generateName(),
+                phone = generatePhone());
+        return UserWithCompoundName;
     }
 
     public static TestData generateUserWithHyphenName() {
-        TestData data = generateUserForPositiveChecks();
-        data.setFullName("Василий Хомяков-Крыскин");
-        return data;
+        TestData userWithHyphenName = new TestData(
+                city = generateCity(),
+                fullName = "Василий Хомяков-Крыскин",
+                phone = generatePhone());
+        return userWithHyphenName;
     }
 
     public static TestData generateUserWithЁ() {
-        TestData data = generateUserForPositiveChecks();
-        data.setFullName("Василий Рёдкин");
-        return data;
+        TestData userWithЁ = new TestData(
+                city = generateCity(),
+                fullName = "Василий Рёдкин",
+                phone = generatePhone());
+        return userWithЁ;
     }
 
     public static TestData generateUserLatinInName() {
-        TestData data = generateUserForPositiveChecks();
-        data.setFullName("Hannah Murray");
-        return data;
+        TestData userLatinInName = new TestData(
+                city = generateCity(),
+                fullName = "Hannah Murray",
+                phone = generatePhone());
+        return userLatinInName;
     }
 
     public static TestData generateUserWithEmptyName() {
-        TestData data = generateUserForPositiveChecks();
-        data.setFullName("");
-        return data;
+        TestData userWithEmptyName = new TestData(
+                city = generateCity(),
+                fullName = "",
+                phone = generatePhone());
+        return  userWithEmptyName;
     }
 
     public static TestData generateUserWithLatinInCity() {
-        TestData data = generateUserForPositiveChecks();
-        data.setCity("Moscow");
-        return data;
-    }
-
-    public static TestData generateUserWithEmptyCity() {
-        TestData data = generateUserForPositiveChecks();
-        data.setCity("");
-        return data;
+        TestData userWithLatinInCity = new TestData(
+                city = "Moscow",
+                fullName = generateName(),
+                phone = generatePhone());
+        return userWithLatinInCity;
     }
 
     public static TestData generateUserWithLongNumber() {
-        TestData data = generateUserForPositiveChecks();
-        data.setPhone(faker.phoneNumber().subscriberNumber(30));
-        return data;
+        TestData userWithEmptyCity = new TestData(
+                city = generateCity(),
+                fullName = generateName(),
+                phone = faker.phoneNumber().subscriberNumber(30));
+        return userWithEmptyCity;
     }
 
     public static TestData generateUserWithWrongPhoneNumberFormat() {
-        TestData data = generateUserForPositiveChecks();
-        data.setPhone("8777");
+        TestData data = new TestData(
+                city = generateCity(),
+                fullName = generateName(),
+                phone = "877");
         return data;
     }
 
     public static TestData generateUserWithShortPhoneNumberFormat() {
-        TestData data = generateUserForPositiveChecks();
-        data.setPhone(faker.phoneNumber().subscriberNumber(3));
+        TestData data = new TestData(
+                city = generateCity(),
+                fullName = generateName(),
+                phone = faker.phoneNumber().subscriberNumber(3));
         return data;
     }
 
     public static TestData generateUserWithEmptyPhoneNumber() {
-        TestData data = generateUserForPositiveChecks();
-        data.setPhone("");
+        TestData data = new TestData(
+                city = generateCity(),
+                fullName = generateName(),
+                phone = "");
         return data;
     }
 
     public static TestData generateUserWithEmptyFields() {
-        TestData data = generateUserForPositiveChecks();
-        data.setPhone("");
-        data.setDate(LocalDate.now().plusDays(5));
-        data.setFullName("");
-        data.setCity("");
-        data.setCheckbox(false);
+        TestData data = new TestData(
+                city = "",
+                fullName = "",
+                phone = "");
         return data;
     }
 
-    public static TestData generateUserWithUncheckedBox() {
-        TestData data = generateUserForPositiveChecks();
-        data.setCheckbox(false);
+    public static TestData generateUserWithEmptyCity() {
+        TestData data = new TestData(
+                city = "",
+                fullName = generateName(),
+                phone = generatePhone());
         return data;
+    }
     }
 
-    public static TestData generateUserWithWrongDate() {
-        TestData data = generateUserForPositiveChecks();
-        data.setDate(LocalDate.now());
-        return data;
-    }
-}
 
