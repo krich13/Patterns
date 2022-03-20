@@ -6,9 +6,6 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 public class DataGenerator {
-    private static String city;
-    private static String fullName;
-    private static String phone;
 
     private static Faker faker = new Faker(new Locale("ru"));
     private final static String[] cities = {"Москва", "Краснодар", "Улан-Удэ", "Владивосток", "Пермь", "Омск", "Самара", "Томск", "Санкт-Петербург"};
@@ -36,108 +33,69 @@ public class DataGenerator {
     }
 
     public static TestData generateUserForPositiveChecks() {
-        TestData UserForPositiveChecks = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = generatePhone());
+        TestData UserForPositiveChecks = new TestData(generateCity(), generateName(), generatePhone());
         return UserForPositiveChecks;
     }
 
     public static TestData generateUserWithCompoundName() {
-        TestData UserWithCompoundName = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = generatePhone());
-        return UserWithCompoundName;
+        TestData UserForPositiveChecks = new TestData(generateCity(), faker.name().nameWithMiddle(), generatePhone());
+        return UserForPositiveChecks;
     }
 
     public static TestData generateUserWithHyphenName() {
-        TestData userWithHyphenName = new TestData(
-                city = generateCity(),
-                fullName = "Василий Хомяков-Крыскин",
-                phone = generatePhone());
+        TestData userWithHyphenName = new TestData(generateCity(), "Василий Хомяков-Крыскин", generatePhone());
         return userWithHyphenName;
     }
 
     public static TestData generateUserWithЁ() {
-        TestData userWithЁ = new TestData(
-                city = generateCity(),
-                fullName = "Василий Рёдкин",
-                phone = generatePhone());
+        TestData userWithЁ = new TestData(generateCity(), "Василий Рёдкин", generatePhone());
         return userWithЁ;
     }
 
     public static TestData generateUserLatinInName() {
-        TestData userLatinInName = new TestData(
-                city = generateCity(),
-                fullName = "Hannah Murray",
-                phone = generatePhone());
+        TestData userLatinInName = new TestData(generateCity(), "Hannah Murray", generatePhone());
         return userLatinInName;
     }
 
     public static TestData generateUserWithEmptyName() {
-        TestData userWithEmptyName = new TestData(
-                city = generateCity(),
-                fullName = "",
-                phone = generatePhone());
-        return  userWithEmptyName;
+        TestData userWithEmptyName = new TestData(generateCity(), "", generatePhone());
+        return userWithEmptyName;
     }
 
     public static TestData generateUserWithLatinInCity() {
-        TestData userWithLatinInCity = new TestData(
-                city = "Moscow",
-                fullName = generateName(),
-                phone = generatePhone());
+        TestData userWithLatinInCity = new TestData("Moscow", generateName(), generatePhone());
         return userWithLatinInCity;
     }
 
     public static TestData generateUserWithLongNumber() {
-        TestData userWithEmptyCity = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = faker.phoneNumber().subscriberNumber(30));
+        TestData userWithEmptyCity = new TestData(generateCity(), generateName(), faker.phoneNumber().subscriberNumber(30));
         return userWithEmptyCity;
     }
 
     public static TestData generateUserWithWrongPhoneNumberFormat() {
-        TestData data = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = "877");
+        TestData data = new TestData(generateCity(), generateName(), "877");
         return data;
     }
 
     public static TestData generateUserWithShortPhoneNumberFormat() {
-        TestData data = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = faker.phoneNumber().subscriberNumber(3));
+        TestData data = new TestData(generateCity(), generateName(), faker.phoneNumber().subscriberNumber(3));
         return data;
     }
 
     public static TestData generateUserWithEmptyPhoneNumber() {
-        TestData data = new TestData(
-                city = generateCity(),
-                fullName = generateName(),
-                phone = "");
+        TestData data = new TestData(generateCity(), generateName(), "");
         return data;
     }
 
     public static TestData generateUserWithEmptyFields() {
-        TestData data = new TestData(
-                city = "",
-                fullName = "",
-                phone = "");
+        TestData data = new TestData("", "", "");
         return data;
     }
 
     public static TestData generateUserWithEmptyCity() {
-        TestData data = new TestData(
-                city = "",
-                fullName = generateName(),
-                phone = generatePhone());
+        TestData data = new TestData("", generateName(), generatePhone());
         return data;
     }
-    }
+}
 
 
