@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import ru.netology.data.DataGenerator;
 import ru.netology.data.TestData;
-import ru.netology.pageObjects.FormToReceiveCreditCard;
+import ru.netology.pageObjects.PageObject;
 
 import java.time.LocalDate;
 
@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 
 public class ApplicationFormTests {
+    PageObject pageObject = new PageObject();
 
     @BeforeAll
     static void setupAll() {
@@ -28,32 +29,32 @@ public class ApplicationFormTests {
 
     //Положительные тесты
     @Test
-    void corectDataPlusDoubleClickOnBook() {
+    void correctDataPlusDoubleClickOnBook() {
         TestData data = DataGenerator.generateUserForPositiveChecks();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.successLoginPage(date);
-        FormToReceiveCreditCard.clickBookForASecondTime(date);
+        pageObject.fillCardForm(data, date);
+        pageObject.successLoginPage(date);
+        pageObject.clickBookForASecondTime(date);
     }
 
     @Test
     void correctDataWithCompoundName() {
         TestData data = DataGenerator.generateUserWithCompoundName();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.successLoginPage(date);
+        pageObject.fillCardForm(data, date);
+        pageObject.successLoginPage(date);
     }
 
     @Test
     void nameWithHyphen() {
         TestData data = DataGenerator.generateUserWithHyphenName();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.successLoginPage(date);
+        pageObject.fillCardForm(data, date);
+        pageObject.successLoginPage(date);
     }
 
     @Test
     void nameWithЁInName() { //падает так как нельзя использовать имя с ё
         TestData data = DataGenerator.generateUserWithЁ();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.successLoginPage(date);
+        pageObject.fillCardForm(data, date);
+        pageObject.successLoginPage(date);
     }
 
     //Негативные тесты
@@ -61,82 +62,82 @@ public class ApplicationFormTests {
     @Test
     void latinInName() {
         TestData data = DataGenerator.generateUserLatinInName();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.failLoginPageWithWrongCredentials();
+        pageObject.fillCardForm(data, date);
+        pageObject.failLoginPageWithWrongCredentials();
     }
 
     @Test
     void latinInCity() {
         TestData data = DataGenerator.generateUserWithLatinInCity();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.deliveryIsNotAvailable();
+        pageObject.fillCardForm(data, date);
+        pageObject.deliveryIsNotAvailable();
     }
 
     @Test
     void emptyName() {
         TestData data = DataGenerator.generateUserWithEmptyName();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.fieldMustBeFilled();
+        pageObject.fillCardForm(data, date);
+        pageObject.fieldMustBeFilled();
     }
 
 
     @Test
     void emptyCity() {
         TestData data = DataGenerator.generateUserWithEmptyCity();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.deliveryIsNotAvailable();
+        pageObject.fillCardForm(data, date);
+        pageObject.deliveryIsNotAvailable();
     }
 
     @Test
     void emptyPhoneNumber() {
         TestData data = DataGenerator.generateUserWithEmptyPhoneNumber();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.fieldMustBeFilled();
+        pageObject.fillCardForm(data, date);
+        pageObject.fieldMustBeFilled();
     }
 
 
     @Test
     void emptyFields() {
         TestData data = DataGenerator.generateUserWithEmptyFields();
-        FormToReceiveCreditCard.fillCardFormWithOutCheckBox(data, date);
-        FormToReceiveCreditCard.fieldMustBeFilled();
+        pageObject.fillCardFormWithOutCheckBox(data, date);
+        pageObject.fieldMustBeFilled();
     }
 
 
     @Test
     void longPhoneNumber() { //падает, так как есть валидация поля, но мы не выдаем ошибку, что пользователь не может вводить более 11 цифр
         TestData data = DataGenerator.generateUserWithLongNumber();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.putCorrectNumber();
+        pageObject.fillCardForm(data, date);
+        pageObject.putCorrectNumber();
     }
 
     @Test
     void wrongPhoneNumberFormat() { //падает, так как нет валидации
         TestData data = DataGenerator.generateUserWithWrongPhoneNumberFormat();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.putCorrectNumber();
+        pageObject.fillCardForm(data, date);
+        pageObject.putCorrectNumber();
     }
 
     @Test
     void shortPhoneNumber() { //падает, так как нет валидации
         TestData data = DataGenerator.generateUserWithShortPhoneNumberFormat();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.putCorrectNumber();
+        pageObject.fillCardForm(data, date);
+        pageObject.putCorrectNumber();
     }
 
     @Test
     void uncheckedBox() {
         TestData data = DataGenerator.generateUserForPositiveChecks();
-        FormToReceiveCreditCard.fillCardFormWithOutCheckBox(data, date);
-        FormToReceiveCreditCard.failLoginWithoutCheckbox();
+        pageObject.fillCardFormWithOutCheckBox(data, date);
+        pageObject.failLoginWithoutCheckbox();
     }
 
     @Test
     void wrongDate() {
         LocalDate date = LocalDate.now();
         TestData data = DataGenerator.generateUserForPositiveChecks();
-        FormToReceiveCreditCard.fillCardForm(data, date);
-        FormToReceiveCreditCard.bookForWrongDate();
+        pageObject.fillCardForm(data, date);
+        pageObject.bookForWrongDate();
     }
 }
 
